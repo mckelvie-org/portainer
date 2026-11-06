@@ -19,7 +19,12 @@ import { Modal } from '@@/modals';
 import { Button } from '@@/buttons';
 
 import styles from './Footer.module.css';
-import { displayVersion } from './displayVersion';
+import {
+  displayVersion,
+  forkCommitUrl,
+  forkImageTagUrl,
+  isPatchedBuild,
+} from './displayVersion';
 
 export function BuildInfoModalButton() {
   const [isBuildInfoVisible, setIsBuildInfoVisible] = useState(false);
@@ -103,7 +108,19 @@ function BuildInfoModal({ closeModal }: { closeModal: () => void }) {
                 <td>
                   <span className="inline-flex flex-wrap items-center">
                     <Tag size="13" className="space-right" />
-                    Image Tag: {Build.ImageTag}
+                    Image Tag:{' '}
+                    {isPatchedBuild(ServerVersion, Build.ImageTag) ? (
+                      <a
+                        className="hyperlink"
+                        href={forkImageTagUrl(Build.ImageTag)}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        {Build.ImageTag}
+                      </a>
+                    ) : (
+                      Build.ImageTag
+                    )}
                   </span>
                 </td>
               </tr>
@@ -111,7 +128,19 @@ function BuildInfoModal({ closeModal }: { closeModal: () => void }) {
                 <td>
                   <span className="inline-flex flex-wrap items-center">
                     <GitCommit size="13" className="space-right" />
-                    Git Commit: {Build.GitCommit}
+                    Git Commit:{' '}
+                    {isPatchedBuild(ServerVersion, Build.ImageTag) ? (
+                      <a
+                        className="hyperlink"
+                        href={forkCommitUrl(Build.GitCommit)}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        {Build.GitCommit}
+                      </a>
+                    ) : (
+                      Build.GitCommit
+                    )}
                   </span>
                 </td>
                 <td />
