@@ -19,6 +19,7 @@ import { Modal } from '@@/modals';
 import { Button } from '@@/buttons';
 
 import styles from './Footer.module.css';
+import { displayVersion } from './displayVersion';
 
 export function BuildInfoModalButton() {
   const [isBuildInfoVisible, setIsBuildInfoVisible] = useState(false);
@@ -30,7 +31,7 @@ export function BuildInfoModalButton() {
   }
 
   const { Version } = statusQuery.data;
-  const { VersionSupport } = versionQuery.data;
+  const { VersionSupport, Build } = versionQuery.data;
 
   return (
     <>
@@ -41,7 +42,7 @@ export function BuildInfoModalButton() {
         onClick={() => setIsBuildInfoVisible(true)}
         title="About Portainer"
       >
-        {`${Version} ${VersionSupport}`}
+        {`${displayVersion(Version, Build?.ImageTag)} ${VersionSupport}`}
       </button>
       {isBuildInfoVisible && (
         <BuildInfoModal closeModal={() => setIsBuildInfoVisible(false)} />
@@ -80,7 +81,9 @@ function BuildInfoModal({ closeModal }: { closeModal: () => void }) {
                 <td>
                   <span className="inline-flex flex-wrap items-center">
                     <Server size="13" className="space-right" />
-                    Server Version: {ServerVersion} {VersionSupport}
+                    Server Version:{' '}
+                    {displayVersion(ServerVersion, Build?.ImageTag)}{' '}
+                    {VersionSupport}
                   </span>
                 </td>
                 <td>
